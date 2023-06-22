@@ -160,11 +160,6 @@ const divByZero = (equation) => {
 
 const calculate = (equation, currentValueElem) => {
     console.log(equation);
-    //const regex = /(^[*/=])|(\s)/g;
-    //equation = equation.replace(regex, '');
-    /* const divByZero = /(\/ 0$)/.test(equation);
-    console.log(divByZero)
-    if (divByZero) return currentValueElem.value = 0; */
-    //return currentValueElem.value = eval(equation);
+
     return eval(equation);
 }
