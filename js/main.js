@@ -31,16 +31,11 @@ const initApp = () => {
     const opButtons = document.querySelectorAll('.operator');
     opButtons.forEach(button => {
         button.addEventListener('click', (event) => {
-
-            // equal sign showing
-            if (newNumberFlag) {
-                previousValueElem.textContent = "";
-                itemArray = [];
-            }
+  
 
             const newOperator = event.target.textContent;
             let currentVal = parseFloat(currentValueElem.value);
-            if (isNaN(currentVal)) currentVal = 0;
+            
 
             // begin new equation 
             if (!itemArray.length) {
@@ -51,81 +46,48 @@ const initApp = () => {
                 return newNumberFlag = true;
             }
 
-            // complete equation 
-            if (itemArray.length) {
-
-                itemArray.push(currentVal); // 3rd elem
-
-                const equationObj = {
-                    num1: parseFloat(itemArray[0]),
-                    num2: parseFloat(currentVal),
-                    op: itemArray[1]
-                }
-
-                equationArray.push(equationObj);
-                const equationString =
-                    `${equationObj['num1']} ${equationObj['op']} ${equationObj['num2']}`;
-
-                if (divByZero(equationString)) {
-                    equationArray.pop();
-                    currentValueElem.value = "/0=🤯💩";
-                    // start new equation 
-                    itemArray = [0, newOperator];
-                } else {
-                    const newValue = calculate(equationString);
-                    previousValueElem.textContent = `${newValue} ${newOperator}`;
-                    // start new equation 
-                    itemArray = [newValue, newOperator];
-                }
-
-                newNumberFlag = true;
-                console.log(equationArray);
-            }
+ 
         });
     });
 
     const equalsButton = document.querySelector('.equals');
     equalsButton.addEventListener('click', () => {
-        const currentVal = currentValueElem.value;
+       const currentVal = currentValueElem.value;
         let equationObj;
 
-        // pressing equals repeatedly
-        if (!itemArray.length && equationArray.length) {
-            const lastEquation = equationArray[equationArray.length - 1];
-            equationObj = {
-                num1: parseFloat(currentVal),
-                num2: lastEquation.num2,
-                op: lastEquation.op
-            }
-        } else if (!itemArray.length) {
-            return currentVal;
-        } else {
+
             itemArray.push(currentVal);
             equationObj = {
                 num1: parseFloat(itemArray[0]),
                 num2: parseFloat(currentVal),
                 op: itemArray[1]
             }
-        }
+            equationArray.push(equationObj);
 
-        equationArray.push(equationObj);
+            const equationString =
+                `${equationObj['num1']} ${equationObj['op']} ${equationObj['num2']}`;
+    
+            previousValueElem.textContent = `${equationString} =`;
+    
+            if (divByZero(equationString)) {
+                equationArray.pop();
+                currentValueElem.value = "/0=🤯💩";
+                alert("divion by zero not allowed");
+            } else {
+                currentValueElem.value = calculate(equationString);
+            }
+    
+            newNumberFlag = true;
+            itemArray = [];
+            
+        });
+        
 
-        const equationString =
-            `${equationObj['num1']} ${equationObj['op']} ${equationObj['num2']}`;
 
-        previousValueElem.textContent = `${equationString} =`;
 
-        if (divByZero(equationString)) {
-            equationArray.pop();
-            currentValueElem.value = "/0=🤯💩";
-        } else {
-            currentValueElem.value = calculate(equationString);
-        }
+        
 
-        newNumberFlag = true;
-        itemArray = [];
-        console.log(equationArray);
-    });
+
 
     const clearButtons = document.querySelectorAll('.clear, .clearEntry');
     clearButtons.forEach(button => {
